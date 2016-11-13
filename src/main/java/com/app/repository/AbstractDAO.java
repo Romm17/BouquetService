@@ -1,4 +1,4 @@
-package com.app.dao;
+package com.app.repository;
 
 import org.apache.log4j.Logger;
 

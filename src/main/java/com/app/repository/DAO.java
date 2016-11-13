@@ -1,4 +1,4 @@
-package com.app.dao;
+package com.app.repository;
 
 import java.io.Serializable;
 import java.util.List;
