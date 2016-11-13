@@ -38,7 +38,7 @@ public class App {
         entityManager.persist(roses);
         System.out.println("Working Directory = " +
                 System.getProperty("user.dir"));
-        byte[] rosesImage = readImage("roses.jpg");
+        byte[] rosesImage = readImage("resources/roses.jpg");
         Bouquet rosesBouquet = new Bouquet("Boucuet of roses", roses, 133.33, rosesImage);
         entityManager.persist(rosesBouquet);
         entityManager.getTransaction().commit();
