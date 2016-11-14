@@ -27,14 +27,18 @@ public class Bouquet {
     @Column(length=100000)
     private byte[] image;
 
+    @Column
+    private String filename;
+
     public Bouquet() {
     }
 
-    public Bouquet(String title, Section section, Double price, byte[] image) {
+    public Bouquet(String title, Section section, Double price, byte[] image, String filename) {
         this.title = title;
         this.section = section;
         this.price = price;
         this.image = image;
+        this.filename = filename;
     }
 
     public Integer getId() {
@@ -75,5 +79,13 @@ public class Bouquet {
 
     public void setImage(byte[] image) {
         this.image = image;
+    }
+
+    public String getFilename() {
+        return filename;
+    }
+
+    public void setFilename(String filename) {
+        this.filename = filename;
     }
 }
