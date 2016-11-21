@@ -28,7 +28,7 @@ public class ImageService extends HttpServlet {
 
         Bouquet bouquet = bouquetDAO.get(Integer.parseInt(bouquetId));
         String mimeType = req.getServletContext().getMimeType(bouquet.getFilename());
-        logger.info("Mimetype of image " + bouquetId + " = '" + mimeType + "'");
+//        logger.info("Mimetype of image " + bouquetId + " = '" + mimeType + "'");
         resp.setContentType(mimeType);
         byte[] imgData = bouquet.getImage();
 

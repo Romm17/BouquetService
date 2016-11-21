@@ -8,39 +8,126 @@
       xmlns:o="http://omnifaces.org/ui"
       xmlns:of="http://omnifaces.org/functions">
 
-<h:body>
-    <h:dataTable
-        value="#{bouquetService.getAllBouquets()}" var="bouquet">
-        <h:column>
-            <f:facet name="header" >
-                <h:outputText value="Id"/>
-            </f:facet>
-            <h:outputText value="#{bouquet.id}"/>
-        </h:column>
-        <h:column>
-            <f:facet name="header" >
-                <h:outputText value="Title"/>
-            </f:facet>
-            <h:outputText value="#{bouquet.title}"/>
-        </h:column>
-        <h:column>
-            <f:facet name="header" >
-                <h:outputText value="Price"/>
-            </f:facet>
-            <h:outputText value="#{bouquet.price}"/>
-        </h:column>
-        <h:column>
-            <f:facet name="header" >
-                <h:outputText value="Section"/>
-            </f:facet>
-            <h:outputText value="#{bouquet.section.title}"/>
-        </h:column>
-        <h:column>
-            <f:facet name="header" >
-                <h:outputText value="Image"/>
-            </f:facet>
-            <h:graphicImage value="DisplayImage?id=#{bouquet.id}"/>
-        </h:column>
-    </h:dataTable>
-</h:body>
+<ui:composition>
+    <ui:insert name="header" >
+        <ui:include src="/WEB-INF/bootstrap.xhtml" />
+    </ui:insert>
+
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-8">
+                <div class="col-md-10 col-md-offset-1">
+                    <h:form class="form-inline">
+                        <div class="form-group">
+                            <h:outputLabel value="Minimal price "/>
+                            <h:inputText class="form-control" value="#{bouquetService.lowerPrice}"/>
+                        </div>
+                        <div class="form-group">
+                            <h:outputLabel value="Maximal price "/>
+                            <h:inputText class="form-control" value="#{bouquetService.upperPrice}"/>
+                        </div>
+                        <div class="form-group">
+                            <h:outputLabel value="Section "/>
+                            <h:selectOneMenu class="form-control" value="#{bouquetService.bouquetSectionId}">
+                                <f:selectItem itemValue="#{null}" itemLabel="All"/>
+                                <f:selectItems value="#{sectionService.getAll()}" var="section"
+                                               itemValue="#{section.id}" itemLabel="#{section.title}"/>
+                            </h:selectOneMenu>
+                        </div>
+                        <div class="form-group">
+                            <h:commandButton value="Filter" class="btn btn-danger">
+                                <f:ajax render="data"/>
+                            </h:commandButton>
+                            <h:commandButton value="Reset" class="btn btn-info" action="#{bouquetService.resetFilter()}">
+                                <f:ajax render="data"/>
+                            </h:commandButton>
+                        </div>
+                    </h:form>
+                </div>
+                <h:dataTable id="data" class="table"
+                    value="#{bouquetService.getAllBouquetsWithFilter()}" var="bouquet">
+                    <h:column>
+                        <f:facet name="header" >
+                            <h:outputText value="Title"/>
+                        </f:facet>
+                        <h:outputText value="#{bouquet.title}"/>
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header" >
+                            <h:outputText value="Price"/>
+                        </f:facet>
+                        <h:outputText value="#{bouquet.price}"/>
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header" >
+                            <h:outputText value="Section"/>
+                        </f:facet>
+                        <h:outputText value="#{bouquet.section.title}"/>
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header" >
+                            <h:outputText value="Image"/>
+                        </f:facet>
+                        <h:graphicImage value="DisplayImage?id=#{bouquet.id}"/>
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header" >
+                            <h:outputText value="Id"/>
+                        </f:facet>
+                        <h:form>
+                            <h:commandButton action="#{orderService.addBouquetToOrder(bouquet.id)}" value="Buy" class="btn btn-primary">
+                                <f:ajax render="order"/>
+                            </h:commandButton>
+                        </h:form>
+                    </h:column>
+                </h:dataTable>
+            </div>
+            <div class="col-sm-4">
+                <h:dataTable id="order" class="table"
+                             value="#{orderService.allBouquetsInOrder}" var="bouquet">
+                    <h:column>
+                        <f:facet name="header" >
+                            <h:outputText value="Title"/>
+                        </f:facet>
+                        <h:outputText value="#{bouquet.title}"/>
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header" >
+                            <h:outputText value="Price"/>
+                        </f:facet>
+                        <h:outputText value="#{bouquet.price}"/>
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header" >
+                            <h:outputText value="Section"/>
+                        </f:facet>
+                        <h:outputText value="#{bouquet.section.title}"/>
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header" >
+                            <h:outputText value="Image"/>
+                        </f:facet>
+                        <h:graphicImage value="DisplayImage?id=#{bouquet.id}"/>
+                    </h:column>
+                    <h:column>
+                        <f:facet name="header" >
+                            <h:outputText value="Id"/>
+                        </f:facet>
+                        <h:form>
+                            <h:commandButton action="#{orderService.removeBouquetFromOrder(bouquet.id)}" value="Remove">
+                                <f:ajax render="order"/>
+                            </h:commandButton>
+                        </h:form>
+                    </h:column>
+                </h:dataTable>
+                <h:form>
+                    <h:commandButton action="#{orderService.resetOrderId}" value="Clear all">
+                        <f:ajax render="order"/>
+                    </h:commandButton>
+                </h:form>
+            </div>
+        </div>
+    </div>
+</ui:composition>
+
 </html>
