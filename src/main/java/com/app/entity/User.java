@@ -11,17 +11,23 @@ import javax.persistence.*;
 public abstract class User {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.TABLE)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     protected Integer id;
 
-    @Column
+    @Column(unique = true)
     protected String login;
 
     @Column
     protected String password;
 
+    @Column
+    protected String role;
+
     public User() {
+        role = getRole();
     }
+
+    public abstract String getRole();
 
     public Integer getId() {
         return id;

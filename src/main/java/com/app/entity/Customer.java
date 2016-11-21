@@ -13,7 +13,8 @@ public class Customer extends User{
     @OneToOne
     private BouquetOrder bouquetOrder;
 
-    public Customer() {
+    public String getRole() {
+        return "Customer";
     }
 
     public BouquetOrder getBouquetOrder() {

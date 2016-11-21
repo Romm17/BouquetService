@@ -10,6 +10,9 @@ import javax.persistence.Table;
 @Table(name = "designer")
 public class Designer extends User {
 
-    public Designer() {
+    @Override
+    public String getRole() {
+        return "Designer";
     }
+
 }

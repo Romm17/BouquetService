@@ -26,16 +26,19 @@ public class ImageService extends HttpServlet {
 
         String bouquetId = req.getParameter("id");
 
-        Bouquet bouquet = bouquetDAO.get(Integer.parseInt(bouquetId));
-        String mimeType = req.getServletContext().getMimeType(bouquet.getFilename());
-//        logger.info("Mimetype of image " + bouquetId + " = '" + mimeType + "'");
-        resp.setContentType(mimeType);
-        byte[] imgData = bouquet.getImage();
+        if (bouquetId == null || bouquetId.equals("") || bouquetId.equals("null")) {
+            resp.setStatus(404);
+        }
+        else {
+            Bouquet bouquet = bouquetDAO.get(Integer.parseInt(bouquetId));
+            String mimeType = req.getServletContext().getMimeType(bouquet.getFilename());
+            resp.setContentType(mimeType);
+            byte[] imgData = bouquet.getImage();
 
-        OutputStream o = resp.getOutputStream();
-        o.write(imgData);
-        o.flush();
-        o.close();
-
+            OutputStream o = resp.getOutputStream();
+            o.write(imgData);
+            o.flush();
+            o.close();
+        }
     }
 }

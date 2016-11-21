@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+<nav class="navbar navbar-default">
+    <ui:repeat
+            value="#{userNavBarList.getNavigationList(userService.getUserByLogin(request.userPrincipal.name).role)}"
+            var="navLink">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="#{request.contextPath}/#{navLink.ref}">#{navLink.title}</a>
+        </div>
+    </ui:repeat>
+    <h:form style="float: right;">
+        <ul class="nav navbar-nav">
+            <c:set var="loggenIn" value="Hello, #{request.userPrincipal.name} | Logout "/>
+            <li><h:commandLink value="#{request.userPrincipal.name != null
+             ? loggenIn
+             : 'Login'}" action="#{logoutService.logoutOrLogin(request.userPrincipal.name)}" /></li>
+        </ul>
+    </h:form>
+</nav>
+
+</html>

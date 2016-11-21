@@ -4,15 +4,26 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-      xmlns:f="http://xmlns.jcp.org/jsf/core"
-      xmlns:o="http://omnifaces.org/ui"
-      xmlns:of="http://omnifaces.org/functions">
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+<h:head>
+    <title>Bouquet Service</title>
+</h:head>
 
 <ui:composition>
     <ui:insert name="header" >
         <ui:include src="/WEB-INF/bootstrap.xhtml" />
     </ui:insert>
-    <h:dataTable id="data" class="table"
+
+    <div class="container-fluid">
+        <div class="row">
+            <ui:insert name="navigation" >
+                <ui:include src="/WEB-INF/navigation.xhtml" />
+            </ui:insert>
+        </div>
+    </div>
+
+    <h:dataTable id="data" class="table table-bordered table-striped"
                  value="#{orderDisplayService.getAllOrders()}" var="order">
         <h:column>
             <f:facet name="header" >
@@ -22,9 +33,15 @@
         </h:column>
         <h:column>
             <f:facet name="header" >
+                <h:outputText value="Status"/>
+            </f:facet>
+            <h:outputText value="#{order.status}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header" >
                 <h:outputText value="Bouquets"/>
             </f:facet>
-            <button data-toggle="collapse" data-target="#collapse#{order.id}">Bouquets</button>
+            <button data-toggle="collapse" data-target="#collapse#{order.id}" class="btn btn-info">Bouquets</button>
             <div id="collapse#{order.id}" class="collapse">
                 <h:dataTable id="bouquets" class="table"
                              value="#{order.bouquets}" var="bouquet">
@@ -57,7 +74,8 @@
                             <h:outputText value=""/>
                         </f:facet>
                         <h:form>
-                            <h:commandButton action="#{orderService.removeBouquetFromOrder(bouquet.id)}" value="Remove">
+                            <h:commandButton action="#{orderService.removeBouquetFromOrder(bouquet.id)}"
+                                             value="Remove" class="btn btn-danger">
                                 <f:ajax render="order"/>
                             </h:commandButton>
                         </h:form>
@@ -70,7 +88,8 @@
                 <h:outputText value=""/>
             </f:facet>
             <h:form>
-                <h:commandButton action="#{orderDisplayService.removeOrderById(order.id)}" value="Remove" class="btn btn-danger">
+                <h:commandButton action="#{orderDisplayService.removeOrderById(order.id)}"
+                                 value="Remove" class="btn btn-danger">
                     <f:ajax render="data"/>
                 </h:commandButton>
             </h:form>

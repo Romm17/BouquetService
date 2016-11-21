@@ -59,7 +59,11 @@ public class BouquetService {
 
     @TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
     public List<Bouquet> getAllBouquets() {
-        return bouquetDAO.getAll();
+        List<Bouquet> bouquets = bouquetDAO.getAll();
+        if (bouquetId == null && bouquets != null && bouquets.size() > 0) {
+            bouquetId = bouquets.get(0).getId();
+        }
+        return bouquets;
     }
 
     @TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)

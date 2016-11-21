@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Created by IntelliJ IDEA.
+  User: romm
+  Date: 01.11.16
+  Time: 15:13
+-->
+<!DOCTYPE html
+        PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+
+<h:head>
+    <title>Bouquet Service</title>
+</h:head>
+
+<h:body>
+    <ui:insert name="header" >
+        <ui:include src="/WEB-INF/bootstrap.xhtml" />
+    </ui:insert>
+
+    <div class="container-fluid">
+        <div class="row">
+            <ui:insert name="navigation" >
+                <ui:include src="/WEB-INF/navigation.xhtml" />
+            </ui:insert>
+        </div>
+    </div>
+    <div class="container">
+        <div class="row">
+            <h:form class="form-horizontal">
+                <div class="form-group">
+                    <h:outputLabel class="col-sm-2" value="Choose bouquet : "/>
+                    <div class="col-sm-4">
+                        <h:selectOneMenu value="#{bouquetService.bouquetId}">
+                            <f:selectItems value="#{bouquetService.getAllBouquets()}" var="bouquet"
+                                           itemValue="#{bouquet.id}" itemLabel="#{bouquet.title}"/>
+                            <f:ajax listener="#{bouquetService.updateView}" render="inputs"/>
+                        </h:selectOneMenu>
+                    </div>
+                </div>
+            </h:form>
+            <h:form enctype="multipart/form-data" class="form-horizontal" id="inputs">
+                <div class="form-group">
+                    <h:outputLabel class="col-sm-2" value="Title : "/>
+                    <div class="col-sm-4">
+                        <h:inputText class="form-control" id="title" value="#{bouquetService.bouquet.title}"/>
+                        <p:watermark for="title" value="#{bouquetService.bouquet.title}" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <h:outputLabel class="col-sm-2" value="Section : "/>
+                    <div class="col-sm-4">
+                        <h:selectOneMenu class="form-control" value="#{bouquetService.bouquetSectionId}">
+                            <f:selectItems value="#{sectionService.getAll()}" var="section"
+                                           itemValue="#{section.id}" itemLabel="#{section.title}"/>
+                        </h:selectOneMenu>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <h:outputLabel class="col-sm-2" value="Price : "/>
+                    <div class="col-sm-4">
+                        <h:inputText class="form-control" id="price" value="#{bouquetService.bouquet.price}"/>
+                        <p:watermark for="price" value="#{bouquetService.bouquet.price}" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <h:outputLabel class="col-sm-2" value="Image : "/>
+                    <div class="col-sm-4">
+                        <h:graphicImage value="DisplayImage?id=#{bouquetService.bouquetId}"/>
+                        <p:fileUpload value="#{bouquetService.image}" mode="simple" />
+                    </div>
+                </div>
+                <h:commandButton action="#{bouquetService.updateBouquet}" value="Update"
+                                 class="btn btn-primary col-sm-offset-2 col-sm-1"/>
+            </h:form>
+        </div>
+    </div>
+</h:body>
+</html>

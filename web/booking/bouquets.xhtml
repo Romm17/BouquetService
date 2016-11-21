@@ -4,9 +4,11 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-      xmlns:f="http://xmlns.jcp.org/jsf/core"
-      xmlns:o="http://omnifaces.org/ui"
-      xmlns:of="http://omnifaces.org/functions">
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+<h:head>
+    <title>Bouquet Service</title>
+</h:head>
 
 <ui:composition>
     <ui:insert name="header" >
@@ -15,8 +17,13 @@
 
     <div class="container-fluid">
         <div class="row">
+            <ui:insert name="navigation" >
+                <ui:include src="/WEB-INF/navigation.xhtml" />
+            </ui:insert>
+        </div>
+        <div class="row">
             <div class="col-sm-8">
-                <div class="col-md-10 col-md-offset-1">
+                <div class="col-md-10 col-md-offset-1" style="margin:20px 0;">
                     <h:form class="form-inline">
                         <div class="form-group">
                             <h:outputLabel value="Minimal price "/>
@@ -44,7 +51,7 @@
                         </div>
                     </h:form>
                 </div>
-                <h:dataTable id="data" class="table"
+                <h:dataTable id="data" class="table table-bordered table-striped"
                     value="#{bouquetService.getAllBouquetsWithFilter()}" var="bouquet">
                     <h:column>
                         <f:facet name="header" >
@@ -72,7 +79,7 @@
                     </h:column>
                     <h:column>
                         <f:facet name="header" >
-                            <h:outputText value="Id"/>
+                            <h:outputText value="Action"/>
                         </f:facet>
                         <h:form>
                             <h:commandButton action="#{orderService.addBouquetToOrder(bouquet.id)}" value="Buy" class="btn btn-primary">
@@ -83,7 +90,7 @@
                 </h:dataTable>
             </div>
             <div class="col-sm-4">
-                <h:dataTable id="order" class="table"
+                <h:dataTable id="order" class="table table-bordered table-striped"
                              value="#{orderService.allBouquetsInOrder}" var="bouquet">
                     <h:column>
                         <f:facet name="header" >
@@ -111,20 +118,28 @@
                     </h:column>
                     <h:column>
                         <f:facet name="header" >
-                            <h:outputText value="Id"/>
+                            <h:outputText value="Action"/>
                         </f:facet>
                         <h:form>
-                            <h:commandButton action="#{orderService.removeBouquetFromOrder(bouquet.id)}" value="Remove">
+                            <h:commandButton action="#{orderService.removeBouquetFromOrder(bouquet.id)}"
+                                             class="btn btn-danger" value="Remove">
                                 <f:ajax render="order"/>
                             </h:commandButton>
                         </h:form>
                     </h:column>
                 </h:dataTable>
-                <h:form>
-                    <h:commandButton action="#{orderService.resetOrderId}" value="Clear all">
-                        <f:ajax render="order"/>
-                    </h:commandButton>
-                </h:form>
+                <div class="form-inline">
+                    <h:form class="form-group">
+                        <h:commandButton action="#{orderService.buyAll}" value="Buy all" class="btn btn-success">
+                            <f:ajax render="order"/>
+                        </h:commandButton>
+                    </h:form>
+                    <h:form class="form-group">
+                        <h:commandButton action="#{orderService.clearAll}" value="Clear all" class="btn btn-danger">
+                            <f:ajax render="order"/>
+                        </h:commandButton>
+                    </h:form>
+                </div>
             </div>
         </div>
     </div>

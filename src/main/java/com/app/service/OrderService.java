@@ -2,6 +2,7 @@ package com.app.service;
 
 import com.app.entity.Bouquet;
 import com.app.entity.BouquetOrder;
+import com.app.entity.BouquetOrderStatus;
 import com.app.repository.BouquetDAO;
 import com.app.repository.BouquetOrderDAO;
 import org.apache.log4j.Logger;
@@ -18,6 +19,7 @@ import javax.jms.*;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -52,6 +54,7 @@ public class OrderService {
         Bouquet bouquet = bouquetDAO.get(bouquetId);
         if (orderId == null) {
             BouquetOrder order = new BouquetOrder();
+            order.setStatus(BouquetOrderStatus.IN_PROGRESS);
             List<Bouquet> bouquetList = new LinkedList<>();
             bouquetList.add(bouquet);
             order.setBouquets(bouquetList);
@@ -64,28 +67,7 @@ public class OrderService {
             order.addBouquet(bouquet);
             orderDAO.update(order);
         }
-        try {
-            //создаем подключение
-            Connection connection = connectionFactory.createConnection();
-            Session session = connection.createSession(true, Session.AUTO_ACKNOWLEDGE);
-            MessageProducer producer = session.createProducer(destination);
-            producer.setDeliveryMode(DeliveryMode.PERSISTENT);
-            TextMessage message = session.createTextMessage();
-            //добавим в JMS сообщение собственное свойство в поле сообщения со свойствами
-            message.setStringProperty("clientType", "web client");
-            //добавляем payload в сообщение
-            message.setText("Bouquet Added");
-            //отправляем сообщение
-            producer.send(message);
-            logger.warn("Sending message: " + "'Added bouquet!'");
-            //закрываем соединения
-            session.close();
-            connection.close();
-
-        } catch (JMSException ex) {
-            System.err.println("Sending message error");
-            ex.printStackTrace();
-        }
+        sendMessage();
     }
 
     public void removeBouquetFromOrder(Integer bouquetId) {
@@ -98,34 +80,38 @@ public class OrderService {
 
     public void readOrderId() {
         FacesContext fc = FacesContext.getCurrentInstance();
-        Cookie[] cookiesArr = ((HttpServletRequest)(fc.getExternalContext().getRequest())).getCookies();
+        HttpSession session = (HttpSession) fc.getExternalContext().getSession(false);
+        Object orderIdParam = session.getAttribute("orderId");
         orderId = null;
-//        logger.warn("Cookies : ");
-        if(cookiesArr != null && cookiesArr.length > 0) {
-            for (int i = 0; i < cookiesArr.length; i++) {
-                String cName = cookiesArr[i].getName();
-                String cValue = cookiesArr[i].getValue();
-//                logger.warn("Cookie : '" + cName + "' = " + cValue);
-                if (cName.equals("orderId")) {
-                    orderId = Integer.parseInt(cValue.trim());
-                }
-            }
+        if(orderIdParam != null) {
+            orderId = Integer.parseInt(orderIdParam.toString().trim());
         }
     }
 
     public void writeOrderId() {
         FacesContext fc = FacesContext.getCurrentInstance();
-        Cookie cOrderId = new Cookie("orderId", "" + orderId);
-        cOrderId.setMaxAge(3600);
-        ((HttpServletResponse)(fc.getExternalContext().getResponse())).addCookie(cOrderId);
+        HttpSession session = (HttpSession) fc.getExternalContext().getSession(false);
+        session.setAttribute("orderId", "" + orderId);
     }
 
-    public void resetOrderId() {
-        FacesContext fc = FacesContext.getCurrentInstance();
-        Cookie cOrderId = new Cookie("orderId", "");
-        cOrderId.setMaxAge(0);
-        ((HttpServletResponse)(fc.getExternalContext().getResponse())).addCookie(cOrderId);
-        orderId = null;
+    public void clearAll() {
+        if (orderId != null) {
+            BouquetOrder order = orderDAO.get(orderId);
+            order.getBouquets().clear();
+            orderDAO.update(order);
+        }
+    }
+
+    public void buyAll() {
+        if (orderId != null) {
+            BouquetOrder order = orderDAO.get(orderId);
+            order.setStatus(BouquetOrderStatus.BOUGHT);
+            orderDAO.update(order);
+            FacesContext fc = FacesContext.getCurrentInstance();
+            HttpSession session = (HttpSession) fc.getExternalContext().getSession(false);
+            session.removeAttribute("orderId");
+            orderId = null;
+        }
     }
 
     public List<Bouquet> getAllBouquetsInOrder() {
@@ -150,6 +136,23 @@ public class OrderService {
 
     public void setBouquetId(Integer bouquetId) {
         this.bouquetId = bouquetId;
+    }
+
+    public void sendMessage() {
+        try {
+            Connection connection = connectionFactory.createConnection();
+            Session session = connection.createSession(true, Session.AUTO_ACKNOWLEDGE);
+            MessageProducer producer = session.createProducer(destination);
+            producer.setDeliveryMode(DeliveryMode.PERSISTENT);
+            TextMessage message = session.createTextMessage();
+            message.setText("Bouquet Added");
+            producer.send(message);
+            logger.warn("Sending message: " + message.getText());
+            session.close();
+            connection.close();
+        } catch (JMSException ex) {
+            logger.error("Sending message failed : " + ex);
+        }
     }
 
 }

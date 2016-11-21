@@ -18,6 +18,9 @@ public class BouquetOrder {
     @OneToOne
     private Customer customer;
 
+    @Column
+    private BouquetOrderStatus status;
+
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "booking")
     private List<Bouquet> bouquets;
@@ -60,5 +63,13 @@ public class BouquetOrder {
 
     public void setBouquets(List<Bouquet> bouquets) {
         this.bouquets = bouquets;
+    }
+
+    public BouquetOrderStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(BouquetOrderStatus status) {
+        this.status = status;
     }
 }

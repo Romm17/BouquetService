@@ -17,7 +17,7 @@ import java.util.List;
  * Created by romm on 21.11.16.
  */
 @ManagedBean
-@ViewScoped
+@NoneScoped
 @TransactionManagement(TransactionManagementType.CONTAINER)
 public class OrderDisplayService {
 
@@ -37,15 +37,11 @@ public class OrderDisplayService {
     @PostConstruct
     public void init() {
         logger.info("OrderDisplayService created.");
-        allOrders = null;
+        allOrders = orderDAO.getAll();
     }
 
     public List<BouquetOrder> getAllOrders() {
         logger.info("Getting all orders...");
-        if (getMessagesCounter() > 0 || allOrders == null) {
-            logger.info("Getting orders from db");
-            allOrders = orderDAO.getAll();
-        }
         return allOrders;
     }
 
@@ -64,13 +60,14 @@ public class OrderDisplayService {
             MessageConsumer consumer = session.createSharedDurableConsumer(destination, "" + id);
             connection.start();
             Message msg = null;
-            do {
-                msg = consumer.receiveNoWait();
-                if (msg != null) {
-                    logger.info("Received message : " + msg.toString());
-                    counter++;
-                }
-            } while (msg != null);
+//            do {
+            msg = consumer.receive();
+            if (msg != null) {
+                logger.info("Received message : " + msg.toString());
+                allOrders = orderDAO.getAll();
+                counter++;
+            }
+//            } while (msg != null);
             consumer.close();
             session.close();
             connection.close();
