@@ -1,5 +1,7 @@
 package com.app.service;
 
+import org.apache.log4j.Logger;
+
 import javax.faces.bean.ManagedBean;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
@@ -23,11 +25,11 @@ public class LogoutService {
 
     public void login() throws IOException {
         ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
-        externalContext.redirect("/BouquetService_war_exploded/login.xhtml");
+        externalContext.redirect("/BouquetService_war_exploded/booking/showOrders.xhtml");
     }
 
     public void logoutOrLogin(String username) throws IOException {
-        if (username == null) {
+        if (username == null || username.equals("")) {
             login();
         }
         else {

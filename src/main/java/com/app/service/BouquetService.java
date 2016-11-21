@@ -46,6 +46,7 @@ public class BouquetService {
     private Double upperPrice;
 
     public BouquetService() {
+        logger.info("Bouquet Service created");
         bouquet = new Bouquet();
     }
 
@@ -57,8 +58,15 @@ public class BouquetService {
         bouquetSectionId = null;
     }
 
+    public void doNothing() {
+        logger.info(lowerPrice);
+        logger.info(upperPrice);
+        logger.info(bouquetSectionId);
+    }
+
     @TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
     public List<Bouquet> getAllBouquets() {
+        logger.info("Get all bouquets called");
         List<Bouquet> bouquets = bouquetDAO.getAll();
         if (bouquetId == null && bouquets != null && bouquets.size() > 0) {
             bouquetId = bouquets.get(0).getId();
@@ -120,6 +128,7 @@ public class BouquetService {
     }
 
     public void setBouquetSectionId(Integer bouquetSectionId) {
+        logger.info("Section set to : " + bouquetSectionId);
         this.bouquetSectionId = bouquetSectionId;
     }
 
@@ -152,6 +161,7 @@ public class BouquetService {
     }
 
     public void setLowerPrice(Double lowerPrice) {
+        logger.info("Lower price set to: " + lowerPrice);
         this.lowerPrice = lowerPrice;
     }
 
@@ -160,6 +170,7 @@ public class BouquetService {
     }
 
     public void setUpperPrice(Double upperPrice) {
+        logger.info("Upper price set to: " + upperPrice);
         this.upperPrice = upperPrice;
     }
 }

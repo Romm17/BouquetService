@@ -4,16 +4,18 @@
         "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:h="http://java.sun.com/jsf/html" xmlns:ui="http://java.sun.com/jsf/facelets">
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets">
 
 <h:head>
     <title>Bouquet Service</title>
-</h:head>
-
-<ui:composition>
     <ui:insert name="header" >
         <ui:include src="/WEB-INF/bootstrap.xhtml" />
     </ui:insert>
+</h:head>
+
+<h:body>
     <div class="container-fluid">
         <div class="row">
             <ui:insert name="navigation" >
@@ -27,13 +29,27 @@
                 <div class="form-group">
                     <h:outputLabel class="col-sm-2" for="login" value="User name:"/>
                     <div class="col-sm-4">
-                        <h:inputText class="form-control" id="login" value="#{userService.login}" autocomplete="off" />
+                        <h:inputText class="form-control" id="login" value="#{userService.login}" autocomplete="off"
+                            validatorMessage="Pattern : a-zA-Z0-9_">
+                            <f:validateRegex pattern="^[a-zA-Z_0-9]+$" />
+                            <f:ajax render="message1"/>
+                        </h:inputText>
+                    </div>
+                    <div class="col-sm-offset-6" id="message1">
+                        <h:message  for="login" styleClass="alert alert-danger" />
                     </div>
                 </div>
                 <div class="form-group">
                     <h:outputLabel class="col-sm-2" for="pass" value="Password:"/>
                     <div class="col-sm-4">
-                        <h:inputSecret value="#{userService.pass}" id="pass" autocomplete="off" class="form-control" />
+                        <h:inputSecret value="#{userService.pass}" id="pass" autocomplete="off" class="form-control"
+                                       alidatorMessage="Pattern : a-zA-Z0-9_">
+                            <f:validateRegex pattern="^[a-zA-Z_0-9]+$" />
+                            <f:ajax render="message2"/>
+                        </h:inputSecret>
+                    </div>
+                    <div class="col-sm-offset-6" id="message2">
+                        <h:message  for="pass" styleClass="alert alert-danger" />
                     </div>
                 </div>
                 <div class="form-group">
@@ -44,6 +60,6 @@
             </h:form>
         </div>
     </div>
-</ui:composition>
+</h:body>
 
 </html>

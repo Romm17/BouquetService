@@ -8,46 +8,55 @@
 
 <h:head>
     <title>Bouquet Service</title>
-</h:head>
-
-<ui:composition>
     <ui:insert name="header" >
         <ui:include src="/WEB-INF/bootstrap.xhtml" />
     </ui:insert>
+</h:head>
 
+<h:body>
     <div class="container-fluid">
         <div class="row">
-            <ui:insert name="navigation" >
-                <ui:include src="/WEB-INF/navigation.xhtml" />
-            </ui:insert>
+            <ui:include src="/WEB-INF/navigation.xhtml" />
         </div>
+    </div>
+    <div class="container-fluid">
         <div class="row">
             <div class="col-sm-8">
                 <div class="col-md-10 col-md-offset-1" style="margin:20px 0;">
-                    <h:form class="form-inline">
+                    <h:form class="form-inline" id="filterForm">
                         <div class="form-group">
                             <h:outputLabel value="Minimal price "/>
-                            <h:inputText class="form-control" value="#{bouquetService.lowerPrice}"/>
+                            <h:inputText id="lower" class="form-control"
+                                         value="#{bouquetService.lowerPrice}">
+                                <f:convertNumber type="number"/>
+                                <f:ajax render="message1"/>
+                            </h:inputText>
+                            <h:message id="message1" for="lower" styleClass="alert alert-danger" />
                         </div>
                         <div class="form-group">
                             <h:outputLabel value="Maximal price "/>
-                            <h:inputText class="form-control" value="#{bouquetService.upperPrice}"/>
+                            <h:inputText id="upper" class="form-control" value="#{bouquetService.upperPrice}">
+                                <f:convertNumber type="number"/>
+                                <f:ajax render="message2"/>
+                            </h:inputText>
+                            <h:message id="message2" for="upper" styleClass="alert alert-danger" />
                         </div>
                         <div class="form-group">
                             <h:outputLabel value="Section "/>
-                            <h:selectOneMenu class="form-control" value="#{bouquetService.bouquetSectionId}">
+                            <h:selectOneMenu id="sectionId" class="form-control" value="#{bouquetService.bouquetSectionId}">
                                 <f:selectItem itemValue="#{null}" itemLabel="All"/>
                                 <f:selectItems value="#{sectionService.getAll()}" var="section"
                                                itemValue="#{section.id}" itemLabel="#{section.title}"/>
+                                <f:ajax event="change" update="@this" />
                             </h:selectOneMenu>
-                        </div>
-                        <div class="form-group">
-                            <h:commandButton value="Filter" class="btn btn-danger">
-                                <f:ajax render="data"/>
+                            <h:commandButton value="sdfsd" class="btn btn-primary" action="#{bouquetService.doNothing}">
+                                <f:ajax event="click" listener="#{bouquetService.doNothing}" render="filterForm data"/>
                             </h:commandButton>
-                            <h:commandButton value="Reset" class="btn btn-info" action="#{bouquetService.resetFilter()}">
-                                <f:ajax render="data"/>
-                            </h:commandButton>
+                            <div class="form-group">
+                                <h:commandButton value="sfsdfds" class="btn btn-danger" action="#{bouquetService.resetFilter}">
+                                    <f:ajax event="click" listener="#{bouquetService.resetFilter}" render="filterForm data"/>
+                                </h:commandButton>
+                            </div>
                         </div>
                     </h:form>
                 </div>
@@ -75,7 +84,7 @@
                         <f:facet name="header" >
                             <h:outputText value="Image"/>
                         </f:facet>
-                        <h:graphicImage value="DisplayImage?id=#{bouquet.id}"/>
+                        <h:graphicImage value="/DisplayImage?id=#{bouquet.id}"/>
                     </h:column>
                     <h:column>
                         <f:facet name="header" >
@@ -114,7 +123,7 @@
                         <f:facet name="header" >
                             <h:outputText value="Image"/>
                         </f:facet>
-                        <h:graphicImage value="DisplayImage?id=#{bouquet.id}"/>
+                        <h:graphicImage value="/DisplayImage?id=#{bouquet.id}"/>
                     </h:column>
                     <h:column>
                         <f:facet name="header" >
@@ -143,6 +152,6 @@
             </div>
         </div>
     </div>
-</ui:composition>
+</h:body>
 
 </html>

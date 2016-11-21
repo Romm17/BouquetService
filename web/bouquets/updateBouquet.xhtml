@@ -37,7 +37,7 @@
                 <div class="form-group">
                     <h:outputLabel class="col-sm-2" value="Choose bouquet : "/>
                     <div class="col-sm-4">
-                        <h:selectOneMenu value="#{bouquetService.bouquetId}">
+                        <h:selectOneMenu class="form-control" value="#{bouquetService.bouquetId}">
                             <f:selectItems value="#{bouquetService.getAllBouquets()}" var="bouquet"
                                            itemValue="#{bouquet.id}" itemLabel="#{bouquet.title}"/>
                             <f:ajax listener="#{bouquetService.updateView}" render="inputs"/>
@@ -49,8 +49,15 @@
                 <div class="form-group">
                     <h:outputLabel class="col-sm-2" value="Title : "/>
                     <div class="col-sm-4">
-                        <h:inputText class="form-control" id="title" value="#{bouquetService.bouquet.title}"/>
+                        <h:inputText id="title" class="form-control" value="#{bouquetService.bouquet.title}"
+                                     validatorMessage="Pattern : a-zA-Z0-9 -_">
+                            <f:validateRegex pattern="^[a-zA-Z \-_0-9]+$" />
+                            <f:ajax render="message1"/>
+                        </h:inputText>
                         <p:watermark for="title" value="#{bouquetService.bouquet.title}" />
+                    </div>
+                    <div class="col-sm-offset-6" id="message1">
+                        <h:message  for="title" styleClass="alert alert-danger" />
                     </div>
                 </div>
                 <div class="form-group">
@@ -65,14 +72,20 @@
                 <div class="form-group">
                     <h:outputLabel class="col-sm-2" value="Price : "/>
                     <div class="col-sm-4">
-                        <h:inputText class="form-control" id="price" value="#{bouquetService.bouquet.price}"/>
+                        <h:inputText id="price" class="form-control" value="#{bouquetService.bouquet.price}">
+                            <f:convertNumber type="number"/>
+                            <f:ajax render="message2"/>
+                        </h:inputText>
                         <p:watermark for="price" value="#{bouquetService.bouquet.price}" />
+                    </div>
+                    <div class="col-sm-offset-6" id="message2">
+                        <h:message for="price" styleClass="alert alert-danger"/>
                     </div>
                 </div>
                 <div class="form-group">
                     <h:outputLabel class="col-sm-2" value="Image : "/>
                     <div class="col-sm-4">
-                        <h:graphicImage value="DisplayImage?id=#{bouquetService.bouquetId}"/>
+                        <h:graphicImage value="/DisplayImage?id=#{bouquetService.bouquetId}"/>
                         <p:fileUpload value="#{bouquetService.image}" mode="simple" />
                     </div>
                 </div>

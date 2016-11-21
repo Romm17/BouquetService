@@ -8,19 +8,20 @@
 
 <h:head>
     <title>Bouquet Service</title>
-</h:head>
-
-<ui:composition>
     <ui:insert name="header" >
         <ui:include src="/WEB-INF/bootstrap.xhtml" />
     </ui:insert>
+</h:head>
 
+<h:body>
     <div class="container-fluid">
         <div class="row">
             <ui:insert name="navigation" >
                 <ui:include src="/WEB-INF/navigation.xhtml" />
             </ui:insert>
         </div>
+    </div>
+    <div class="container-fluid">
         <div class="row">
             <h:dataTable id="data" class="table table-bordered table-striped"
                          value="#{bouquetService.getAllBouquets()}" var="bouquet">
@@ -46,11 +47,11 @@
                     <f:facet name="header" >
                         <h:outputText value="Image"/>
                     </f:facet>
-                    <h:graphicImage value="DisplayImage?id=#{bouquet.id}"/>
+                    <h:graphicImage value="/DisplayImage?id=#{bouquet.id}"/>
                 </h:column>
             </h:dataTable>
         </div>
     </div>
-</ui:composition>
+</h:body>
 
 </html>
