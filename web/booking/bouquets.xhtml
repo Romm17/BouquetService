@@ -49,11 +49,11 @@
                                                itemValue="#{section.id}" itemLabel="#{section.title}"/>
                                 <f:ajax event="change" update="@this" />
                             </h:selectOneMenu>
-                            <h:commandButton value="sdfsd" class="btn btn-primary" action="#{bouquetService.doNothing}">
+                            <h:commandButton value="Filter" class="btn btn-primary" action="#{bouquetService.doNothing}">
                                 <f:ajax event="click" listener="#{bouquetService.doNothing}" render="filterForm data"/>
                             </h:commandButton>
                             <div class="form-group">
-                                <h:commandButton value="sfsdfds" class="btn btn-danger" action="#{bouquetService.resetFilter}">
+                                <h:commandButton value="Reset" class="btn btn-danger" action="#{bouquetService.resetFilter}">
                                     <f:ajax event="click" listener="#{bouquetService.resetFilter}" render="filterForm data"/>
                                 </h:commandButton>
                             </div>
