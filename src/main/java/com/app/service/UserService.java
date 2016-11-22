@@ -4,14 +4,12 @@ import com.app.entity.Customer;
 import com.app.entity.User;
 import com.app.repository.CustomerDAO;
 import com.app.repository.UserDAO;
-import com.sun.deploy.net.HttpRequest;
 
 import javax.ejb.EJB;
 import javax.ejb.TransactionManagement;
 import javax.ejb.TransactionManagementType;
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.RequestScoped;
-import javax.faces.context.FacesContext;
+import javax.faces.bean.SessionScoped;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
@@ -19,7 +17,7 @@ import java.util.List;
  * Created by romm on 21.11.16.
  */
 @ManagedBean
-@RequestScoped
+@SessionScoped
 @TransactionManagement(TransactionManagementType.CONTAINER)
 public class UserService {
 

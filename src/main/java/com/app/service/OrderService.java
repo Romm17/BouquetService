@@ -1,8 +1,6 @@
 package com.app.service;
 
-import com.app.entity.Bouquet;
-import com.app.entity.BouquetOrder;
-import com.app.entity.BouquetOrderStatus;
+import com.app.entity.*;
 import com.app.repository.BouquetDAO;
 import com.app.repository.BouquetOrderDAO;
 import org.apache.log4j.Logger;
@@ -20,6 +18,7 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.security.Principal;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -39,6 +38,9 @@ public class OrderService {
     @EJB
     private BouquetDAO bouquetDAO;
 
+    @ManagedProperty(value = "#{userService}")
+    private UserService userService;
+
     @Resource(mappedName = "java:/JmsXA")
     private ConnectionFactory connectionFactory;
 
@@ -55,6 +57,14 @@ public class OrderService {
         if (orderId == null) {
             BouquetOrder order = new BouquetOrder();
             order.setStatus(BouquetOrderStatus.IN_PROGRESS);
+            FacesContext facesContext = FacesContext.getCurrentInstance();
+            Principal principal = facesContext.getExternalContext().getUserPrincipal();
+            if (principal != null) {
+                User customer = userService.getUserByLogin(principal.getName());
+                if (customer instanceof Customer) {
+                    order.setCustomer((Customer) customer);
+                }
+            }
             List<Bouquet> bouquetList = new LinkedList<>();
             bouquetList.add(bouquet);
             order.setBouquets(bouquetList);
@@ -76,6 +86,7 @@ public class OrderService {
         Bouquet bouquet = bouquetDAO.get(bouquetId);
         order.removeBouquet(bouquet);
         orderDAO.update(order);
+        sendMessage(orderId);
     }
 
     public void readOrderId() {
@@ -99,6 +110,7 @@ public class OrderService {
             BouquetOrder order = orderDAO.get(orderId);
             order.getBouquets().clear();
             orderDAO.update(order);
+            sendMessage(orderId);
         }
     }
 
@@ -110,6 +122,7 @@ public class OrderService {
             FacesContext fc = FacesContext.getCurrentInstance();
             HttpSession session = (HttpSession) fc.getExternalContext().getSession(false);
             session.removeAttribute("orderId");
+            sendMessage(orderId);
             orderId = null;
         }
     }
@@ -153,6 +166,14 @@ public class OrderService {
         } catch (JMSException ex) {
             logger.error("Sending message failed : " + ex);
         }
+    }
+
+    public UserService getUserService() {
+        return userService;
+    }
+
+    public void setUserService(UserService userService) {
+        this.userService = userService;
     }
 
 }

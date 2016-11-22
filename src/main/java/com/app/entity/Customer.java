@@ -25,4 +25,8 @@ public class Customer extends User{
         this.bouquetOrder = bouquetOrder;
     }
 
+    @Override
+    public String toString() {
+        return login;
+    }
 }

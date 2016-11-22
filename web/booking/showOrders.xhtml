@@ -39,6 +39,12 @@
         </h:column>
         <h:column>
             <f:facet name="header" >
+                <h:outputText value="Customer"/>
+            </f:facet>
+            <h:outputText value="#{order.customer}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header" >
                 <h:outputText value="Bouquets"/>
             </f:facet>
             <button data-toggle="collapse" data-target="#collapse#{order.id}" class="btn btn-info">Bouquets</button>
