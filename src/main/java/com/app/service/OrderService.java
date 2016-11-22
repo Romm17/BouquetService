@@ -67,7 +67,7 @@ public class OrderService {
             order.addBouquet(bouquet);
             orderDAO.update(order);
         }
-        sendMessage();
+        sendMessage(orderId);
     }
 
     public void removeBouquetFromOrder(Integer bouquetId) {
@@ -138,14 +138,14 @@ public class OrderService {
         this.bouquetId = bouquetId;
     }
 
-    public void sendMessage() {
+    public void sendMessage(Integer bouquetOrderId) {
         try {
             Connection connection = connectionFactory.createConnection();
             Session session = connection.createSession(true, Session.AUTO_ACKNOWLEDGE);
             MessageProducer producer = session.createProducer(destination);
             producer.setDeliveryMode(DeliveryMode.PERSISTENT);
             TextMessage message = session.createTextMessage();
-            message.setText("Bouquet Added");
+            message.setText("" + bouquetOrderId);
             producer.send(message);
             logger.warn("Sending message: " + message.getText());
             session.close();

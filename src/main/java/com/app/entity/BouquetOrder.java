@@ -9,7 +9,7 @@ import java.util.Objects;
  */
 @Entity
 @Table(name = "bouquetOrder")
-public class BouquetOrder {
+public class BouquetOrder implements Comparable<BouquetOrder> {
 
     @Id
     @GeneratedValue
@@ -71,5 +71,10 @@ public class BouquetOrder {
 
     public void setStatus(BouquetOrderStatus status) {
         this.status = status;
+    }
+
+    @Override
+    public int compareTo(BouquetOrder o) {
+        return Integer.compare(id, o.getId());
     }
 }
