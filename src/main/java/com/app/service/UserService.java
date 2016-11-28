@@ -14,6 +14,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
 /**
+ * This class represents all methods application need to manage Users
  * Created by romm on 21.11.16.
  */
 @ManagedBean
@@ -21,9 +22,15 @@ import java.util.List;
 @TransactionManagement(TransactionManagementType.CONTAINER)
 public class UserService {
 
+    /**
+     * DAO to access entities
+     */
     @EJB
     private CustomerDAO customerDAO;
 
+    /**
+     * DAO to access entities
+     */
     @EJB
     private UserDAO userDAO;
 

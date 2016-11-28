@@ -16,6 +16,9 @@ import java.util.List;
 @TransactionManagement(TransactionManagementType.CONTAINER)
 public class SectionService {
 
+    /**
+     * DAO to access entities
+     */
     @EJB
     private SectionDAO sectionDAO;
 

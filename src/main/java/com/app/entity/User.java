@@ -3,6 +3,8 @@ package com.app.entity;
 import javax.persistence.*;
 
 /**
+ *
+ * This class represents abstract user
  * Created by romm on 13.11.16.
  */
 @Entity
@@ -27,6 +29,10 @@ public abstract class User {
         role = getRole();
     }
 
+    /**
+     * Should be realized in each concrete user
+     * @return role of user
+     */
     public abstract String getRole();
 
     public Integer getId() {

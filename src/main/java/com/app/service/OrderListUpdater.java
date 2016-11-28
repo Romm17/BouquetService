@@ -11,6 +11,7 @@ import javax.jms.MessageListener;
 import javax.jms.TextMessage;
 
 /**
+ * MDB for updating order list in orderRepository
  * Created by romm on 22.11.16.
  */
 @MessageDriven(
@@ -26,11 +27,21 @@ import javax.jms.TextMessage;
         })
 public class OrderListUpdater implements MessageListener {
 
+    /**
+     * Application logger
+     */
     private static final Logger logger = Logger.getLogger(OrderListUpdater.class);
 
+    /**
+     * DAO to access entities
+     */
     @EJB
     private OrderRepository orderRepository;
 
+    /**
+     * Updates order in orderRepository list by id given in message text
+     * @param message with orderId
+     */
     @Override
     public void onMessage(Message message) {
         if (message instanceof TextMessage) {

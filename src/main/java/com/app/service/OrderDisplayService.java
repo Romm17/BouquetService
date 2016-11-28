@@ -12,6 +12,7 @@ import javax.faces.bean.*;
 import java.util.List;
 
 /**
+ * This class represents methods for displaying and removing orders by id
  * Created by romm on 21.11.16.
  */
 @ManagedBean
@@ -19,8 +20,14 @@ import java.util.List;
 @TransactionManagement(TransactionManagementType.CONTAINER)
 public class OrderDisplayService {
 
+    /**
+     * Application logger
+     */
     private static final Logger logger = Logger.getLogger(OrderDisplayService.class);
 
+    /**
+     * DAO to access entities
+     */
     @EJB
     private OrderRepository orderRepository;
 
@@ -29,11 +36,19 @@ public class OrderDisplayService {
         logger.info("OrderDisplayService created.");
     }
 
+    /**
+     * Dislays all orders
+     * @return all orders
+     */
     public List<BouquetOrder> getAllOrders() {
         logger.info("Getting all orders...");
         return orderRepository.getOrderList();
     }
 
+    /**
+     * Removed order by id
+     * @param bouquetOrderId
+     */
     public void removeOrderById(Integer bouquetOrderId) {
         orderRepository.removeOrderById(bouquetOrderId);
     }

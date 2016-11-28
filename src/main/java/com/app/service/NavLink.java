@@ -1,15 +1,20 @@
 package com.app.service;
 
 /**
+ * Class for store hypertext name and reference together
  * Created by romm on 21.11.16.
  */
 public class NavLink {
 
+    /**
+     * Link title
+     */
     private String title;
-    private String ref;
 
-    public NavLink() {
-    }
+    /**
+     * Link reference
+     */
+    private String ref;
 
     public NavLink(String title, String ref) {
         this.title = title;

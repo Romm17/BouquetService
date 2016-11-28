@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Objects;
 
 /**
+ *
+ * This class represents customer's order of Bouquets
  * Created by romm on 13.11.16.
  */
 @Entity
@@ -18,6 +20,9 @@ public class BouquetOrder implements Comparable<BouquetOrder> {
     @OneToOne
     private Customer customer;
 
+    /**
+     * Order status (IN_PROCESS, BOUGHT etc)
+     */
     @Column
     private BouquetOrderStatus status;
 
@@ -25,10 +30,18 @@ public class BouquetOrder implements Comparable<BouquetOrder> {
     @JoinTable(name = "booking")
     private List<Bouquet> bouquets;
 
+    /**
+     * Method to add bouquet to order
+     * @param bouquet
+     */
     public void addBouquet(Bouquet bouquet) {
         bouquets.add(bouquet);
     }
 
+    /**
+     * Method to remove bouquet from order
+     * @param bouquet
+     */
     public void removeBouquet(Bouquet bouquet) {
         for (int i = 0; i < bouquets.size(); i++) {
             if (Objects.equals(bouquets.get(i).getId(), bouquet.getId())) {

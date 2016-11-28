@@ -23,6 +23,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
+ * This class represents all methods application need to manage Orders
  * Created by romm on 15.11.16.
  */
 @ManagedBean
@@ -30,27 +31,55 @@ import java.util.List;
 @TransactionManagement(TransactionManagementType.CONTAINER)
 public class OrderService {
 
+    /**
+     * Application logger
+     */
     private static final Logger logger = Logger.getLogger(OrderService.class);
 
+    /**
+     * DAO to access entities
+     */
     @EJB
     private BouquetOrderDAO orderDAO;
 
+    /**
+     * DAO to access entities
+     */
     @EJB
     private BouquetDAO bouquetDAO;
 
+    /**
+     * Repository to get users
+     */
     @ManagedProperty(value = "#{userService}")
     private UserService userService;
 
+    /**
+     * ConnectionFactory for sending messages
+     */
     @Resource(mappedName = "java:/JmsXA")
     private ConnectionFactory connectionFactory;
 
+    /**
+     * Destination for sending messages
+     */
     @Resource(mappedName = "java:jboss/exported/jms/topic/test")
     private Topic destination;
 
+    /**
+     * Field to temporary store object
+     */
     private Integer orderId;
 
+    /**
+     * Field to temporary store object
+     */
     private Integer bouquetId;
 
+    /**
+     * Add bouquet to order and send message about it
+     * @param bouquetId
+     */
     public void addBouquetToOrder(Integer bouquetId) {
         readOrderId();
         Bouquet bouquet = bouquetDAO.get(bouquetId);
@@ -80,6 +109,10 @@ public class OrderService {
         sendMessage(orderId);
     }
 
+    /**
+     * Remove bouquet to order and send message about it
+     * @param bouquetId
+     */
     public void removeBouquetFromOrder(Integer bouquetId) {
         readOrderId();
         BouquetOrder order = orderDAO.get(orderId);
@@ -89,6 +122,9 @@ public class OrderService {
         sendMessage(orderId);
     }
 
+    /**
+     * Get order id from session
+     */
     public void readOrderId() {
         FacesContext fc = FacesContext.getCurrentInstance();
         HttpSession session = (HttpSession) fc.getExternalContext().getSession(false);
@@ -99,12 +135,18 @@ public class OrderService {
         }
     }
 
+    /**
+     * Put order id to session
+     */
     public void writeOrderId() {
         FacesContext fc = FacesContext.getCurrentInstance();
         HttpSession session = (HttpSession) fc.getExternalContext().getSession(false);
         session.setAttribute("orderId", "" + orderId);
     }
 
+    /**
+     * Remove all bouquets from order and send message about it
+     */
     public void clearAll() {
         if (orderId != null) {
             BouquetOrder order = orderDAO.get(orderId);
@@ -114,6 +156,9 @@ public class OrderService {
         }
     }
 
+    /**
+     * Confirms order
+     */
     public void buyAll() {
         if (orderId != null) {
             BouquetOrder order = orderDAO.get(orderId);
@@ -127,6 +172,10 @@ public class OrderService {
         }
     }
 
+    /**
+     * Get all bouquets by order stored in session
+     * @return
+     */
     public List<Bouquet> getAllBouquetsInOrder() {
         readOrderId();
         if (orderId != null) {
@@ -151,6 +200,10 @@ public class OrderService {
         this.bouquetId = bouquetId;
     }
 
+    /**
+     * Informs system about changed order
+     * @param bouquetOrderId
+     */
     public void sendMessage(Integer bouquetOrderId) {
         try {
             Connection connection = connectionFactory.createConnection();

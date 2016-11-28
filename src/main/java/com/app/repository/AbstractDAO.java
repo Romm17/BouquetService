@@ -8,13 +8,20 @@ import java.io.Serializable;
 import java.util.List;
 
 /**
+ * This class implements DAO interface methods
+ * Leaves getEntityClass() method abstract to be implemented by concrete DAO
  * Created by romm on 11.10.16.
  */
 public abstract class AbstractDAO<T, PK extends Serializable> implements DAO<T, PK> {
-
+    /**
+     * Entity Manager to manage entities
+     */
     @PersistenceContext(unitName = "app")
     private EntityManager entityManager;
 
+    /**
+     * Application logger
+     */
     private static final Logger logger = Logger.getLogger(AbstractDAO.class);
 
     @Override

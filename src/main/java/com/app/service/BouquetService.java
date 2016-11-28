@@ -18,6 +18,7 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
+ * This class represents all methods application need to manage Bouquets
  * Created by romm on 13.11.16.
  */
 @ManagedBean
@@ -25,24 +26,51 @@ import java.util.stream.Collectors;
 @TransactionManagement(TransactionManagementType.CONTAINER)
 public class BouquetService {
 
+    /**
+     * Application logger
+     */
     private static final Logger logger = Logger.getLogger(BouquetService.class);
 
+    /**
+     * DAO to access entities
+     */
     @EJB
     private BouquetDAO bouquetDAO;
 
+    /**
+     * Service to manage sections
+     */
     @ManagedProperty("#{sectionService}")
     private SectionService sectionService;
 
+    /**
+     * Field to temporary store object
+     */
     private Bouquet bouquet;
 
+    /**
+     * Field to temporary store object
+     */
     private Integer bouquetId;
 
+    /**
+     * Field to temporary store object
+     */
     private Integer bouquetSectionId;
 
+    /**
+     * Field to temporary store object
+     */
     private UploadedFile image;
 
+    /**
+     * Field to temporary store object
+     */
     private Double lowerPrice;
 
+    /**
+     * Field to temporary store object
+     */
     private Double upperPrice;
 
     public BouquetService() {
@@ -50,6 +78,9 @@ public class BouquetService {
         bouquet = new Bouquet();
     }
 
+    /**
+     * Set filters on page to default
+     */
     @PostConstruct
     public void resetFilter() {
         logger.warn("Data reseted");
@@ -64,6 +95,10 @@ public class BouquetService {
         logger.info(bouquetSectionId);
     }
 
+    /**
+     *
+     * @return list of all bouquets
+     */
     @TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
     public List<Bouquet> getAllBouquets() {
         logger.info("Get all bouquets called");
@@ -74,6 +109,10 @@ public class BouquetService {
         return bouquets;
     }
 
+    /**
+     * Fileter by price and section
+     * @return filtered list of bouquets
+     */
     @TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
     public List<Bouquet> getAllBouquetsWithFilter() {
         List<Bouquet> bouquets = bouquetDAO.getAll();
@@ -87,6 +126,10 @@ public class BouquetService {
         return bouquets;
     }
 
+    /**
+     * Add bouquet to repository
+     * @throws IOException
+     */
     public void addBouquet() throws IOException {
         bouquet.setSection(sectionService.getSectionById(bouquetSectionId));
         bouquet.setFilename(image.getFileName());
@@ -94,6 +137,10 @@ public class BouquetService {
         bouquetDAO.create(bouquet);
     }
 
+    /**
+     * Update bouquet to repository
+     * @throws IOException
+     */
     public void updateBouquet() throws IOException {
         String bouquetTitle = bouquet.getTitle();
         Double bouquetPrice = bouquet.getPrice();
@@ -106,11 +153,17 @@ public class BouquetService {
         bouquetDAO.update(bouquet);
     }
 
+    /**
+     * Update bouquets on page
+     */
     public void updateView() {
         bouquet = bouquetDAO.get(bouquetId);
         bouquetSectionId = bouquet.getSection().getId();
     }
 
+    /**
+     * Remove bouquet from repository
+     */
     public void removeBouquetById() {
         bouquetDAO.delete(bouquetDAO.get(bouquetId));
     }

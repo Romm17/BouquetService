@@ -12,16 +12,29 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 
 /**
+ * This class is a HttpServlet that returns bouquet image by bouquet id
  * Created by romm on 14.11.16.
  */
 @ManagedBean
 public class ImageService extends HttpServlet {
 
+    /**
+     * Application logger
+     */
     private static final Logger logger = Logger.getLogger(ImageService.class);
 
+    /**
+     * DAO to access entities
+     */
     @EJB
     private BouquetDAO bouquetDAO;
 
+    /**
+     * This method returns bouquet image by bouquet id in response
+     * @param req HttpServletRequest
+     * @param resp HttpServletResponse
+     * @throws IOException
+     */
     public void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
 
         String bouquetId = req.getParameter("id");

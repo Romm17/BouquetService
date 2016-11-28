@@ -3,6 +3,8 @@ package com.app.entity;
 import javax.persistence.*;
 
 /**
+ *
+ * This class represents category of bouquet
  * Created by romm on 12.11.16.
  */
 @Entity

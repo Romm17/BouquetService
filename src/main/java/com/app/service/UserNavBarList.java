@@ -8,12 +8,16 @@ import java.util.List;
 import java.util.Map;
 
 /**
+ * This class represents list of available link for each role
  * Created by romm on 21.11.16.
  */
 @ManagedBean
 @ApplicationScoped
 public class UserNavBarList {
 
+    /**
+     * Map of lists of available link for each role
+     */
     private final Map<String, List<NavLink> > navBarList = new HashMap<>();
 
     {
@@ -35,6 +39,11 @@ public class UserNavBarList {
         navBarList.put("", guestNavBar);
     }
 
+    /**
+     *
+     * @param role
+     * @return list of available link given role
+     */
     public List<NavLink> getNavigationList(String role) {
         return navBarList.get(role == null ? "" : role);
     }
